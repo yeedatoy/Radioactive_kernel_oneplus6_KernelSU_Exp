@@ -117,3 +117,9 @@ all.config
 
 # fetched Android config fragments
 kernel/configs/android-*.cfg
+
+# Kernel compilation output directory
+out/
+
+# Wireguard
+net/wireguard/
