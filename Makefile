@@ -412,7 +412,8 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 		   -Wno-unused-const-variable -Wno-array-bounds -Wno-incompatible-pointer-types \
 		   -Wno-misleading-indentation -Wno-tautological-compare -Wno-error=misleading-indentation \
 		   -Wno-format-truncation -Wno-duplicate-decl-specifier -Wno-memset-elt-size -Wno-bool-operation \
-		   -Wno-int-in-bool-context -Wno-parentheses -Wno-switch-unreachable -Wno-stringop-overflow -Wno-format-overflow
+		   -Wno-int-in-bool-context -Wno-parentheses -Wno-switch-unreachable -Wno-stringop-overflow -Wno-format-overflow \
+                   -Wno-nonnull -Wno-shift-overflow -fno-asynchronous-unwind-tables \
 
 KBUILD_AFLAGS_KERNEL :=
 KBUILD_CFLAGS_KERNEL :=
