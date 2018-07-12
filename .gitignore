@@ -133,3 +133,7 @@ net/wireguard/
 # zip folder
 /zip
 *.zip
+
+# Build script and changelog generator
+build.sh
+changelog.sh
