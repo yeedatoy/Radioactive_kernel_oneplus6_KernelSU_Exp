@@ -1,6 +1,15 @@
 #
 # Automatically generated file; DO NOT EDIT.
 #
+
+#
+# Radioactive extra stuff
+#
+CONFIG_FRANDOM=y
+
+#
+# Default configuration
+#
 CONFIG_ARM64=y
 CONFIG_64BIT=y
 CONFIG_ARCH_PHYS_ADDR_T_64BIT=y
@@ -710,6 +719,7 @@ CONFIG_TCP_CONG_ILLINOIS=y
 CONFIG_TCP_CONG_DCTCP=y
 CONFIG_TCP_CONG_CDG=y
 CONFIG_TCP_CONG_BBR=y
+CONFIG_TCP_CONG_SOCIOPATH=y
 CONFIG_DEFAULT_CUBIC=y
 # CONFIG_DEFAULT_HTCP is not set
 # CONFIG_DEFAULT_HYBLA is not set
