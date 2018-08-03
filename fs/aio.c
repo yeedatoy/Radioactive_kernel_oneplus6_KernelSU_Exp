@@ -1616,10 +1616,6 @@ long do_io_submit(aio_context_t ctx_id, long nr,
 	int i = 0;
 	struct blk_plug plug;
 
-#ifndef CONFIG_AIO_SSD_ONLY
-	struct blk_plug plug;
-#endif
-
 	if (unlikely(nr < 0))
 		return -EINVAL;
 
@@ -1636,10 +1632,6 @@ long do_io_submit(aio_context_t ctx_id, long nr,
 	}
 
 	blk_start_plug(&plug);
-
-#ifndef CONFIG_AIO_SSD_ONLY
-	blk_start_plug(&plug);
-#endif
 
 	/*
 	 * AKPM: should this return a partial result if some of the IOs were
@@ -1664,10 +1656,6 @@ long do_io_submit(aio_context_t ctx_id, long nr,
 			break;
 	}
 	blk_finish_plug(&plug);
-
-#ifndef CONFIG_AIO_SSD_ONLY
-	blk_finish_plug(&plug);
-#endif
 
 	percpu_ref_put(&ctx->users);
 	return i ? i : ret;
