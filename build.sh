@@ -12,12 +12,12 @@ txtrst=$(tput sgr0)             # reset
 blink=$(tput blink)             # blink
 
 KERNEL_NAME="~Radioactive"
-INCREMENTAL_VERSION="V1.0.3"
+INCREMENTAL_VERSION="V1.0.4"
 export LOCALVERSION="${KERNEL_NAME}-${INCREMENTAL_VERSION}"
 export KBUILD_BUILD_USER=acuicultor
 export KBUILD_BUILD_HOST=NuclearPowerPlant
-export PATH=$PATH:/home/acuicultor/Android/toolchains/linaro-aarch64-linux-android-4.9/bin
-export CROSS_COMPILE=aarch64-linux-android-
+export PATH=$PATH:/home/acuicultor/Android/toolchains/aarch64-linux-gnu-linaro7.3.1/bin
+export CROSS_COMPILE=aarch64-linux-gnu-
 
 # Functions
 function clean_all {
