@@ -6,7 +6,6 @@
 # Radioactive extra stuff
 #
 CONFIG_FRANDOM=y
-CONFIG_AIO_SSD_ONLY=y
 
 #
 # Default configuration
