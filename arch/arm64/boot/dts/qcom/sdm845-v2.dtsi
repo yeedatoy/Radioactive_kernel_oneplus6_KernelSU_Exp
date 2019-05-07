@@ -537,7 +537,6 @@
 			2764800 160
 			2784000 165
 			2803200 170
-			2841600 180
 			2956800 190
 		>;
 		idle-cost-data = <
@@ -566,7 +565,7 @@
 
 		qcom,gpu-pwrlevel@0 {
 			reg = <0>;
-			qcom,gpu-freq = <838000000>;
+			qcom,gpu-freq = <842000000>;
 			qcom,bus-freq = <12>;
 			qcom,bus-min = <12>;
 			qcom,bus-max = <12>;
@@ -574,9 +573,9 @@
 
 		qcom,gpu-pwrlevel@1 {
 			reg = <1>;
-			qcom,gpu-freq = <767000000>;
+			qcom,gpu-freq = <787000000>;
 			qcom,bus-freq = <12>;
-			qcom,bus-min = <10>;
+			qcom,bus-min = <12>;
 			qcom,bus-max = <12>;
 		};
 
@@ -584,7 +583,7 @@
 			reg = <2>;
 			qcom,gpu-freq = <710000000>;
 			qcom,bus-freq = <12>;
-			qcom,bus-min = <10>;
+			qcom,bus-min = <12>;
 			qcom,bus-max = <12>;
 		};
 
