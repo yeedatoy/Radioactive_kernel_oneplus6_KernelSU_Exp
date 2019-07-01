@@ -817,9 +817,14 @@ config QPNP_MISC
 config BOOTLOADER_LOG
 	tristate "show bootloader log"
 	depends on OF
-	default y
 	help
 	  show bootloader log in kernel
+
+config FORCE_FAST_CHARGE
+	bool "Force faster charge rate for USB"
+	default y
+	help
+	  This allows users to override default charge rate for USB
 
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"

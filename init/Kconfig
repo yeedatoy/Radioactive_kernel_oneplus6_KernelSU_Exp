@@ -1131,6 +1131,23 @@ menuconfig CGROUP_SCHED
 	  bandwidth allocation to such task groups. It uses cgroups to group
 	  tasks.
 
+config CAPACITY_CLAMPING
+	bool "Capacity clamping per group of tasks"
+	depends on CPU_FREQ_GOV_SCHEDUTIL
+	depends on CGROUP_SCHED
+	default n
+	help
+	  This feature allows the scheduler to enforce maximum and minimum
+	  capacity on each CPU based on RUNNABLE tasks currently scheduled
+	  on that CPU.
+	  Minimum capacity can be used for example to "boost" the performance
+	  of important tasks by running them on an OPP which can be higher than
+	  the minimum one eventually selected by the schedutil governor.
+	  Maximum capacity can be used for example to "restrict" the maximum
+	  OPP which can be requested by background tasks.
+
+	  If in doubt, say N.
+
 if CGROUP_SCHED
 config FAIR_GROUP_SCHED
 	bool "Group scheduling for SCHED_OTHER"
@@ -1396,6 +1413,15 @@ config SCHED_TUNE
 
 	  Since this support exposes a single system-wide knob, the specified
 	  boost value is applied to all (CFS) tasks in the system.
+
+	  If unsure, say N.
+
+config DYNAMIC_STUNE_BOOST
+	bool "Dynamic SchedTune boosting support"
+	depends on SCHED_TUNE
+	help
+	  This option extends the SchedTune framework and provides APIs to
+	  activate and reset SchedTune boosting from anywhere in the kernel.
 
 	  If unsure, say N.
 

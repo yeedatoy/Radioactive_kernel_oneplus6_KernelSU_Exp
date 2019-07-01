@@ -25,6 +25,11 @@
 #include <linux/project_info.h>
 #include <linux/pm_wakeup.h>
 #include "../sde/sde_trace.h"
+
+#ifdef CONFIG_KLAPSE
+#include <linux/klapse.h>
+#endif
+
 /**
  * topology is currently defined by a set of following 3 values:
  * 1. num of layer mixers
@@ -700,15 +705,15 @@ static int dsi_panel_update_backlight(struct dsi_panel *panel,
 	if (panel->is_hbm_enabled){
 		return 0;
 		}
-    if (panel->bl_config.bl_high2bit){
-	if(HBM_flag==true){
-		return 0;
-		}
-	else{
-		rc = mipi_dsi_dcs_set_display_brightness_samsung(dsi, bl_lvl);
-		}
-    } else
-	rc = mipi_dsi_dcs_set_display_brightness(dsi, bl_lvl);
+	if (panel->bl_config.bl_high2bit){
+		if(HBM_flag==true){
+			return 0;
+			}
+		else{
+			rc = mipi_dsi_dcs_set_display_brightness_samsung(dsi, bl_lvl);
+			}
+	} else
+		rc = mipi_dsi_dcs_set_display_brightness(dsi, bl_lvl);
 	if (rc < 0)
 		pr_err("failed to update dcs backlight:%d\n", bl_lvl);
 
@@ -742,6 +747,10 @@ int dsi_panel_set_backlight(struct dsi_panel *panel, u32 bl_lvl)
 		pr_err("Backlight type(%d) not supported\n", bl->type);
 		rc = -ENOTSUPP;
 	}
+	
+#ifdef CONFIG_KLAPSE
+	set_rgb_slider(bl_lvl);
+#endif
 
 	return rc;
 }

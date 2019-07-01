@@ -65,6 +65,8 @@
 #include <linux/kthread.h>
 #include <linux/memcontrol.h>
 #include <linux/show_mem_notifier.h>
+#include <linux/cpu_input_boost.h>
+#include <linux/devfreq_boost.h>
 
 #include <asm/sections.h>
 #include <asm/tlbflush.h>
@@ -1960,7 +1962,8 @@ static void change_pageblock_range(struct page *pageblock_page,
  * is worse than movable allocations stealing from unmovable and reclaimable
  * pageblocks.
  */
-static bool can_steal_fallback(unsigned int order, int start_mt)
+static bool can_steal_fallback(unsigned int current_order, unsigned int start_order,
+			       int start_mt, int fallback_mt)
 {
 	/*
 	 * Leaving this order check is intended, although there is
@@ -1969,12 +1972,17 @@ static bool can_steal_fallback(unsigned int order, int start_mt)
 	 * but, below check doesn't guarantee it and that is just heuristic
 	 * so could be changed anytime.
 	 */
-	if (order >= pageblock_order)
+	if (current_order >= pageblock_order)
 		return true;
 
-	if (order >= pageblock_order / 2 ||
+	/* don't let unmovable allocations cause migrations simply because of free pages */
+	if ((start_mt != MIGRATE_UNMOVABLE && current_order >= pageblock_order / 2) ||
+	        /* only steal reclaimable page blocks for unmovable allocations */
+	        (start_mt == MIGRATE_UNMOVABLE && fallback_mt != MIGRATE_MOVABLE && current_order >= pageblock_order / 2) ||
+	        /* reclaimable can steal aggressively */
 		start_mt == MIGRATE_RECLAIMABLE ||
-		start_mt == MIGRATE_UNMOVABLE ||
+		/* allow unmovable allocs up to 64K without migrating blocks */
+		(start_mt == MIGRATE_UNMOVABLE && start_order >= 5) ||
 		page_group_by_mobility_disabled)
 		return true;
 
@@ -2014,8 +2022,9 @@ static void steal_suitable_fallback(struct zone *zone, struct page *page,
  * we can steal other freepages all together. This would help to reduce
  * fragmentation due to mixed migratetype pages in one pageblock.
  */
-int find_suitable_fallback(struct free_area *area, unsigned int order,
-			int migratetype, bool only_stealable, bool *can_steal)
+int find_suitable_fallback(struct free_area *area, unsigned int current_order,
+			   int migratetype, bool only_stealable,
+			   int start_order, bool *can_steal)
 {
 	int i;
 	int fallback_mt;
@@ -2032,7 +2041,7 @@ int find_suitable_fallback(struct free_area *area, unsigned int order,
 		if (list_empty(&area->free_list[fallback_mt]))
 			continue;
 
-		if (can_steal_fallback(order, migratetype))
+		if (can_steal_fallback(current_order, start_order, migratetype, fallback_mt))
 			*can_steal = true;
 
 		if (!only_stealable)
@@ -2181,7 +2190,7 @@ __rmqueue_fallback(struct zone *zone, unsigned int order, int start_migratetype)
 				--current_order) {
 		area = &(zone->free_area[current_order]);
 		fallback_mt = find_suitable_fallback(area, current_order,
-				start_migratetype, false, &can_steal);
+				start_migratetype, false, order, &can_steal);
 		if (fallback_mt == -1)
 			continue;
 
@@ -2699,11 +2708,9 @@ struct page *buffered_rmqueue(struct zone *preferred_zone,
 			pcp = &this_cpu_ptr(zone->pageset)->pcp;
 
 			/* First try to get CMA pages */
-			if (migratetype == MIGRATE_MOVABLE &&
-				gfp_flags & __GFP_CMA) {
+			if (migratetype == MIGRATE_MOVABLE)
 				list = get_populated_pcp_list(zone, 0, pcp,
 						get_cma_migrate_type(), cold);
-			}
 
 			if (list == NULL) {
 				/*
@@ -3847,6 +3854,10 @@ retry:
 	if (order > PAGE_ALLOC_COSTLY_ORDER && !(gfp_mask & __GFP_REPEAT))
 		goto nopage;
 
+	/* Boost when memory is low so allocation latency doesn't get too bad */
+	cpu_input_boost_kick_max(100);
+	devfreq_boost_kick_max(DEVFREQ_MSM_CPUBW, 100);
+
 	if (should_reclaim_retry(gfp_mask, order, ac, alloc_flags,
 				 did_some_progress > 0, &no_progress_loops))
 		goto retry;
@@ -4080,8 +4091,10 @@ static struct page *__page_frag_refill(struct page_frag_cache *nc,
 				PAGE_FRAG_CACHE_MAX_ORDER);
 	nc->size = page ? PAGE_FRAG_CACHE_MAX_SIZE : PAGE_SIZE;
 #endif
-	if (unlikely(!page))
+	if (unlikely(!page)) {
+		gfp |= __GFP_KSWAPD_RECLAIM;
 		page = alloc_pages_node(NUMA_NO_NODE, gfp, 0);
+	}
 
 	nc->va = page ? page_address(page) : NULL;
 

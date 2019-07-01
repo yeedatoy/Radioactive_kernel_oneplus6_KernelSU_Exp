@@ -392,7 +392,7 @@ extern int lockdep_tasklist_lock_is_held(void);
 extern void sched_init(void);
 extern void sched_init_smp(void);
 extern asmlinkage void schedule_tail(struct task_struct *prev);
-extern void init_idle(struct task_struct *idle, int cpu, bool hotplug);
+extern void init_idle(struct task_struct *idle, int cpu);
 extern void init_idle_bootup_task(struct task_struct *idle);
 
 extern cpumask_var_t cpu_isolated_map;
@@ -1812,6 +1812,9 @@ struct task_struct {
 
 #ifdef CONFIG_CGROUP_SCHED
 	struct task_group *sched_task_group;
+#ifdef CONFIG_CAPACITY_CLAMPING
+	struct rb_node cap_clamp_node[2];
+#endif
 #endif
 	struct sched_dl_entity dl;
 
@@ -4034,7 +4037,7 @@ static inline unsigned long rlimit_max(unsigned int limit)
 #define SCHED_CPUFREQ_DL	(1U << 1)
 #define SCHED_CPUFREQ_IOWAIT	(1U << 2)
 #define SCHED_CPUFREQ_INTERCLUSTER_MIG (1U << 3)
-#define SCHED_CPUFREQ_WALT (1U << 4)
+#define SCHED_CPUFREQ_RESERVED (1U << 4)
 #define SCHED_CPUFREQ_PL	(1U << 5)
 #define SCHED_CPUFREQ_EARLY_DET	(1U << 6)
 #define SCHED_CPUFREQ_FORCE_UPDATE (1U << 7)
@@ -4051,6 +4054,12 @@ void cpufreq_add_update_util_hook(int cpu, struct update_util_data *data,
 				    unsigned int flags));
 void cpufreq_remove_update_util_hook(int cpu);
 #endif /* CONFIG_CPU_FREQ */
+
+#ifdef CONFIG_DYNAMIC_STUNE_BOOST
+int do_stune_boost(char *st_name, int boost, int *slot);
+int do_stune_sched_boost(char *st_name, int *slot);
+int reset_stune_boost(char *st_name, int slot);
+#endif /* CONFIG_DYNAMIC_STUNE_BOOST */
 
 extern DEFINE_PER_CPU_READ_MOSTLY(int, sched_load_boost);
 

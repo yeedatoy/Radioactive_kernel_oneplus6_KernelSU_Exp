@@ -2007,7 +2007,7 @@ int sched_set_init_task_load(struct task_struct *p, int init_load_pct)
 	return 0;
 }
 
-void init_new_task_load(struct task_struct *p, bool idle_task)
+void init_new_task_load(struct task_struct *p)
 {
 	int i;
 	u32 init_load_windows;
@@ -2024,9 +2024,6 @@ void init_new_task_load(struct task_struct *p, bool idle_task)
 
 	/* Don't have much choice. CPU frequency would be bogus */
 	BUG_ON(!p->ravg.curr_window_cpu || !p->ravg.prev_window_cpu);
-
-	if (idle_task)
-		return;
 
 	if (current->init_load_pct)
 		init_load_pct = current->init_load_pct;
@@ -3180,7 +3177,6 @@ void walt_irq_work(struct irq_work *irq_work)
 	struct rq *rq;
 	int cpu;
 	u64 wc;
-	int flag = SCHED_CPUFREQ_WALT;
 	bool is_migration = false;
 
 	/* Am I the window rollover work or the migration work? */
@@ -3215,16 +3211,16 @@ void walt_irq_work(struct irq_work *irq_work)
 
 	for_each_sched_cluster(cluster) {
 		for_each_cpu(cpu, &cluster->cpus) {
-			int nflag = flag;
+			int nflag = 0;
 
 			rq = cpu_rq(cpu);
 
 			if (is_migration) {
 				if (rq->notif_pending) {
-					nflag |= SCHED_CPUFREQ_INTERCLUSTER_MIG;
+					nflag = SCHED_CPUFREQ_INTERCLUSTER_MIG;
 					rq->notif_pending = false;
 				} else {
-					nflag |= SCHED_CPUFREQ_FORCE_UPDATE;
+					nflag = SCHED_CPUFREQ_FORCE_UPDATE;
 				}
 			}
 

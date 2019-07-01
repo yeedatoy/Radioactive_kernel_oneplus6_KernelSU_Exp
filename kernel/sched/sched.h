@@ -350,6 +350,14 @@ struct task_group {
 #endif
 #endif
 
+#ifdef CONFIG_CAPACITY_CLAMPING
+#define CAP_CLAMP_MIN 0
+#define CAP_CLAMP_MAX 1
+
+	/* Min and Max capacity constraints for tasks in this group */
+	unsigned int cap_clamp[2];
+#endif
+
 #ifdef CONFIG_RT_GROUP_SCHED
 	struct sched_rt_entity **rt_se;
 	struct rt_rq **rt_rq;
@@ -535,6 +543,24 @@ struct cfs_rq {
 	struct list_head throttled_list;
 #endif /* CONFIG_CFS_BANDWIDTH */
 #endif /* CONFIG_FAIR_GROUP_SCHED */
+};
+
+/* Capacity capping -related fields in a runqueue */
+struct cap_clamp_cpu {
+	/*
+	 * RBTree to keep sorted capacity constraints
+	 * of currently RUNNABLE tasks on a CPU.
+	 */
+	struct rb_root tree;
+
+	/*
+	 * Pointers to the RUNNABLE task defining the current
+	 * capacity constraint for a CPU.
+	 */
+	struct rb_node *node;
+
+	/* Current CPU's capacity constraint */
+	unsigned int value;
 };
 
 static inline int rt_bandwidth_enabled(void)
@@ -745,6 +771,11 @@ struct rq {
 	struct list_head leaf_cfs_rq_list;
 	struct list_head *tmp_alone_branch;
 #endif /* CONFIG_FAIR_GROUP_SCHED */
+
+#ifdef CONFIG_CAPACITY_CLAMPING
+	/* Min and Max capacity constraints */
+	struct cap_clamp_cpu cap_clamp_cpu[2];
+#endif /* CONFIG_CAPACITY_CLAMPING */
 
 	/*
 	 * This is part of a global counter where only the total sum
@@ -2281,11 +2312,6 @@ DECLARE_PER_CPU(struct update_util_data *, cpufreq_update_util_data);
 static inline void cpufreq_update_util(struct rq *rq, unsigned int flags)
 {
 	struct update_util_data *data;
-
-#ifdef CONFIG_SCHED_WALT
-	if (!(flags & SCHED_CPUFREQ_WALT))
-		return;
-#endif
 
 	data = rcu_dereference_sched(*per_cpu_ptr(&cpufreq_update_util_data,
 					cpu_of(rq)));
