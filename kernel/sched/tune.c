@@ -1038,7 +1038,7 @@ static void write_default_values(struct cgroup_subsys_state *css)
 {
 	u8 i;
 	char cg_name[11];
-	const int boost_values[4] = { 0, 0, 0, -30 };
+	const int boost_values[4] = { 5, 5, 0, -30 };
 	const bool prefer_idle_values[4] = { 0, 1, 1, 0 };
 	const char *stune_groups[] =
 	{ "/", "top-app", "foreground", "background" };
