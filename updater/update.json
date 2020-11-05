@@ -1,11 +1,11 @@
 {
   "kernel": {
     "name": "Radioactive Kernel OP6/T custom",
-    "version": "V10.7.9",
-    "link": "https://github.com/acuicultor/Radioactive_kernel_op6/releases/download/V10.7.9/RadioactiveKernel_V10.7.9_CUSTOM_OnePlus6-6T.zip",
+    "version": "V10.8.0",
+    "link": "https://github.com/acuicultor/Radioactive_kernel_op6/releases/download/V10.8.0/RadioactiveKernel_V10.8.0_CUSTOM_OnePlus6-6T.zip",
     "changelog_url": "https://raw.githubusercontent.com/acuicultor/Radioactive_kernel_op6/release_Q_custom/updater/changelog.txt",
-    "date": "2020-09-05",
-    "sha1": "3dff9819a3924fc504b8a7c79d59954dadffef77"
+    "date": "2020-11-05",
+    "sha1": "e0ce681ad53d8b729a34f687de4f14de98241f59"
   },
   "support": {
     "link": "https://forum.xda-developers.com/oneplus-6/oneplus-6--6t-cross-device-development/kernel-radioactive-kernel-v10-0-8-t4005987"           
