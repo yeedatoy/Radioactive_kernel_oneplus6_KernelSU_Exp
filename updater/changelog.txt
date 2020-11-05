@@ -1,9 +1,10 @@
 Project name: Radioactive_kernel_op6
   * update build version (acuicultor)
-  * Linux 4.9.235 (Greg Kroah-Hartman) 
-  * Linux 4.9.234 (Greg Kroah-Hartman)
-  * Linux 4.9.233 (Greg Kroah-Hartman)
-  * Linux 4.9.232 (Greg Kroah-Hartman)
-  * Linux 4.9.231 (Greg Kroah-Hartman) 
-  * Linux 4.9.230 (Greg Kroah-Hartman)
+  * Linux 4.9.241 (Greg Kroah-Hartman) 
+  * Linux 4.9.240 (Greg Kroah-Hartman)
+  * Linux 4.9.239 (Greg Kroah-Hartman)
+  * Linux 4.9.238 (Greg Kroah-Hartman)
+  * Linux 4.9.237 (Greg Kroah-Hartman) 
+  * Linux 4.9.236 (Greg Kroah-Hartman)
+
 
