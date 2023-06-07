@@ -20,7 +20,7 @@ fi
 date="$(date +%Y.%m.%d-%I:%M)"
 
 
-make ARCH=arm64 O=out CC=clang radioactive_defconfig
+make ARCH=arm64 O=out CC=clang radioactive_ksu_defconfig
 # 定义编译线程数
 make ARCH=arm64 O=out CC=clang -j24 2>&1 | tee kernel_log-${date}.txt
 
