@@ -1,4 +1,7 @@
 # Radioactive_kernel_oneplus6_KernelSU_Exp  
+***  
+[![Build OnePlus 6 and 6t KernelSU Kernel](https://github.com/Coconutat/Radioactive_kernel_oneplus6_KernelSU_Exp/actions/workflows/build-oneplus-6-6t-ksu-kernel.yml/badge.svg)](https://github.com/Coconutat/Radioactive_kernel_oneplus6_KernelSU_Exp/actions/workflows/build-oneplus-6-6t-ksu-kernel.yml)  
+ ***  
 基于[Radioactive_kernel_op6](https://github.com/acuicultor/Radioactive_kernel_op6)内核二次开发。  
 基于一加6/6T氧OS，安卓10。  
 内核版本v4.9.249，支持KernelSU。  
