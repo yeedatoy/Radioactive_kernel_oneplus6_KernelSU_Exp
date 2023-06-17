@@ -14,9 +14,9 @@ jobs:
     uses: ./.github/workflows/build-oneplus-6-6t-ksu-kernel.yml
     secrets: inherit
 
-    release:
-      needs: 
-        - build-kernel
+  release:
+    needs: 
+      - build-kernel
 
       - name: GetTime
         id: get_time
