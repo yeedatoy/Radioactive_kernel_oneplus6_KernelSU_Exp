@@ -15,7 +15,7 @@ jobs:
     secrets: inherit
 
   release:
-    needs:
+    needs: 
       - build-kernel
 
       - name: GetTime
