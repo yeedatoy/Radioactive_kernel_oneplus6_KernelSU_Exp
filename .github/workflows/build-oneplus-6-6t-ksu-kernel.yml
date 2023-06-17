@@ -2,8 +2,8 @@ name: Build OnePlus 6 and 6t KernelSU Kernel
 on:
   workflow_dispatch:
   schedule:
-      # Run once a week on Sunday at midnight. See http://crontab.guru
-      - cron: '0 21 * * *'
+      # 每周周六00:00运行. 时间设置参考： http://crontab.guru
+      - cron: '0 0 * * 6'
   push:
     branches:
       - HEAD
