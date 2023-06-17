@@ -9,14 +9,14 @@ on:
       - "v*"
   workflow_dispatch:
 
-    jobs:
-      build-kernel:
-        uses: ./.github/workflows/build-oneplus-6-6t-ksu-kernel.yml
-        secrets: inherit
+jobs:
+  build-kernel:
+    uses: ./.github/workflows/build-oneplus-6-6t-ksu-kernel.yml
+    secrets: inherit
 
-      release:
-        needs: 
-          - build-kernel
+    release:
+      needs: 
+        - build-kernel
 
       - name: GetTime
         id: get_time
