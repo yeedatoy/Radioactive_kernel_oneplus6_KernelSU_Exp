@@ -41,7 +41,7 @@ jobs:
         git clone https://github.com/Coconutat/AnyKernel3_Backup -b Op6_KSU --depth=1
         rm -rf AnyKernel3/.git
     
-    - name: GetTime
+    - name: GetTime 
       id: get_time
       run: |
         echo "TIME=$(TZ=UTC-8 date +%m%d%H%M )" >> $GITHUB_OUTPUT
